@@ -1,7 +1,11 @@
 import HeaderBox from "@/components/HeaderBox";
+import RightSidebar from "@/components/RighrSidebar";
 import TotalBalanceBox from "@/components/TotalBalanceBox";
 import Image from "next/image";
 
+const Home = () => {
+  const loggedIn = { firstName: 'Hunny', lastName: 'JSM', email: 'contact@jsmastery.pro'}
+}
 export default function Home() {
   return (
     <section className="home">
@@ -19,7 +23,15 @@ export default function Home() {
                 totalCurrentBalance={0.69}
                 />
             </header>
+
+            RECENT TRANSACTIONS
         </div>
+
+        <RightSidebar 
+          user={loggedIn}
+          transactions={[]}
+          banks={[{}, {}]}
+        />
     </section>
   );
 }
