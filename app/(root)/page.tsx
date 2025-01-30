@@ -1,12 +1,13 @@
 import HeaderBox from "@/components/HeaderBox";
-import RightSidebar from "@/components/RighrSidebar";
+import RightSidebar from "@/components/RightSidebar";
 import TotalBalanceBox from "@/components/TotalBalanceBox";
 import Image from "next/image";
 
+
+
+
 const Home = () => {
-  const loggedIn = { firstName: 'Hunny', lastName: 'JSM', email: 'contact@jsmastery.pro'}
-}
-export default function Home() {
+    const loggedIn = { firstName: 'Hunny', lastName: 'JSM', email: 'contact@jsmastery.pro'}
   return (
     <section className="home">
         <div className="home-content">
@@ -28,10 +29,11 @@ export default function Home() {
         </div>
 
         <RightSidebar 
-          user={loggedIn}
+          user={loggedIn as any}
           transactions={[]}
-          banks={[{}, {}]}
+          banks={[{}, {}] as any}
         />
     </section>
   );
 }
+export default Home
