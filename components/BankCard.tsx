@@ -2,6 +2,7 @@
 import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import PayPassIcon from "../public/icons/Paypass.svg"
 const BankCard = ({accounts, username, showBalance} : {accounts:Bank[] & Account[], username:string, showBalance: boolean}) => {
 
     return (
@@ -16,7 +17,7 @@ const BankCard = ({accounts, username, showBalance} : {accounts:Bank[] & Account
                             <div className=' absolute left-[1rem] text-[1.05rem] text-white top-[1rem]'><p>Daniel Jaglen</p></div>
                         </div>
                         <div className=' absolute right-[2.5rem] bottom-[1rem]'><Image className='z-51' src="/icons/visa.svg" width={50} height={50} alt='card1'/></div>
-                        <div className=' absolute right-[2rem] top-[1rem]'><Image className='z-51' src="/icons/PayPass.svg" width={25} height={25} alt='card2'/></div>
+                        <div className=' absolute right-[2rem] top-[1rem]'><Image className='z-51' src={PayPassIcon.src} width={25} height={25} alt='card2'/></div>
                         <div className=' absolute left-[1rem] text-[0.9rem] text-white bottom-[2.5rem]'><p>DJ</p></div>
                         <div className=' absolute left-[1rem] text-[1.05rem] text-white bottom-[1rem]'><p>1234 1234 1234 1234</p></div>     
                     </div>
@@ -24,11 +25,11 @@ const BankCard = ({accounts, username, showBalance} : {accounts:Bank[] & Account
             )}
              {accounts[1] && (
                 <Link href="" className='absolute top-8 right-0 z-0 w-[90%]'>
-                    <div className='bg-[#4893FF] rounded-[1rem]'>
-                        <Image className='' src="/icons/lines.svg" width={380} height={150} alt="card"/>
+                    <div className='bg-[#4893FF] h-[175px] rounded-[1rem]'>
+                        <Image className='' src="/icons/lines.svg" width={380} height={175} alt="card"/>
                     </div>
                     <div className=' absolute right-[0.8rem] bottom-[0.8rem]'><Image className='z-51' src="/icons/mastercard.svg" width={50} height={50} alt='card1'/></div>
-                    <div className=' absolute right-[1.15rem] top-[1rem]'><Image className='z-51' src="/icons/PayPass.svg" width={20} height={20} alt='card1'/></div>          
+                    <div className=' absolute right-[1.15rem] top-[1rem]'><Image className='z-51' src={PayPassIcon.src} width={20} height={20} alt='card1'/></div>          
                    
                     <div className=' absolute left-[1rem] text-[1rem] text-white bottom-[1rem]'><p>1234 1234 1234 1234</p></div>     
                 </Link>
