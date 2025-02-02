@@ -5,7 +5,6 @@ import Image from "next/image";
 
 
 
-
 const Home = () => {
     const loggedIn = { firstName: 'Hunny', lastName: 'JSM', email: 'contact@jsmastery.pro'}
   return (
@@ -21,7 +20,7 @@ const Home = () => {
                 <TotalBalanceBox
                 accounts={[]}
                 totalBanks={1}
-                totalCurrentBalance={0.69}
+                totalCurrentBalance={1110.69}
                 />
             </header>
 
