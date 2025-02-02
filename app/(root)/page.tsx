@@ -6,7 +6,7 @@ import Image from "next/image";
 
 
 const Home = () => {
-    const loggedIn = { firstName: 'Hunny', lastName: 'JSM', email: 'contact@jsmastery.pro'}
+    const loggedIn = { firstName: 'Hunny', lastName: 'JSM', email: 'TeamProjectt@COMP4431.com'}
   return (
     <section className="home">
         <div className="home-content">
