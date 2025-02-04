@@ -28,10 +28,14 @@ const MobileNav = ({ user }: MobileNavProps) => {
     <SheetTitle></SheetTitle> {/* Required for accessibility */}
   </SheetHeader>
   <nav className="flex flex-col gap-4">
-    <Link href="/" className="cursor-pointer flex items-center gap-1 px-4">
-      <Image src="/icons/logo.svg" width={34} height={34} alt="Horizon logo"/>
-      <h1 className="text-26 font-ibm-plex-serif font-bold text-black-1">Horizon</h1>
-    </Link>
+  <Link href="/" className="cursor-pointer flex items-center gap-1">
+            <Image 
+              src="/icons/logo.png"
+              width={50}
+              height={434}
+              alt="LU Banking Management logo"/>
+            <h1 className="text-26 font-ibm-plex-serif font-bold text-black-1">LU Banking Management</h1>
+          </Link>
     <div className="mobilenav-sheet">
       <SheetClose asChild>
         <nav className="flex h-full flex-col gap-6 pt-16">
