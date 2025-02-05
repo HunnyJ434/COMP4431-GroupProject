@@ -13,8 +13,7 @@ export default function RootLayout({
           <Image 
             src="/icons/auth-image.jpg"
             alt="Auth image"
-            width={500}
-            height={500}
+
             layout="fill"
             objectFit="cover"  // Ensures the image fits well
           />
