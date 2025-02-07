@@ -9,11 +9,11 @@ const RightSidebar = ({user, transactions, banks}: RightSidebarProps) => {
             <div className="profile-banner" />
             <div className="profile">
                 <div className="profile-img">
-                   <span className="text-5xl font-bold text-blue-500">{user.firstName[0]}</span>
+                   <span className="text-5xl font-bold text-blue-500">{user.name[0]}</span>
                 </div>
                 <div className="profile-details">
                     <h1 className='profile-name'>
-                        {user.firstName} {user.lastName}
+                        {user.name} 
                     </h1>
                     <p className="profile-email">
                         {user.email}
@@ -27,14 +27,14 @@ const RightSidebar = ({user, transactions, banks}: RightSidebarProps) => {
             <div className="flex w-full justify-between">
               <h2 className="header-2">My Banks</h2>
               <Link href="/" className="flex gap">
-                <Image src="/icons/plus.svg" width={20} height={20} alt="plus"/>
+                <Image src="/icons/auth-image.jpg" width={20} height={20} alt="Auth image"/>
                 <h2 className='text-14 font-semifold text-grey-600'>Add Bank</h2>
               </Link>
             </div>
             {banks?.length > 0 && (
-              <div className='relative'>
-                <div className=''>
-                    <BankCard accounts={banks} username={`${user.firstName} ${user.lastName}`} showBalance={false}/>
+              <div className="relativeflex flex-1 flex-col items-center justify-center gap-5">
+                <div className='relative z-10'>
+                    <BankCard accounts={banks} username={user.name} showBalance={false}/>
                 </div>
               </div>
             )}
