@@ -1,7 +1,9 @@
+'use client';
 import React from 'react'
 import Image from 'next/image'
 import { logoutAccount } from '@/lib/actions/user.actions';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
+
 const Footer = ({user, type='desktop'}: FooterProps)=>{
     const router = useRouter();
 
