@@ -8,14 +8,14 @@ declare type SearchParamProps = {
 // ========================================
 
 declare type SignUpParams = {
-  firstName?: string;
-  lastName?: string;
-  address1?: string;
-  city?: string;
-  state?: string;
-  postalCode?: string;
-  dateOfBirth?: string;
-  ssn?: string;
+  firstName: string;
+  lastName: string;
+  address1: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  dateOfBirth: string;
+  ssn: string;
   email: string;
   password: string;
 };
@@ -204,7 +204,7 @@ declare interface BankTabItemProps {
 }
 
 declare interface TotalBalanceBoxProps {
-  accounts: Account[];
+  accounts?: any[];
   totalBanks: number;
   totalCurrentBalance: number;
 }
