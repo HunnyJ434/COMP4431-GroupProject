@@ -54,14 +54,22 @@ export const createOnDemandAuthorization = async () => {
 export const createDwollaCustomer = async (
     newCustomer: NewDwollaCustomerParams
 ) => {
+    // Create a new object 'nCustomer' and add PostalCode dynamically
+    const { postalcode, ...nCustomer } = newCustomer;
+
+    // Dynamically add PostalCode to nCustomer object
+    const nCustomerWithPostalCode = { ...nCustomer, postalCode: postalcode };
+
     try {
         return await dwollaClient
-            .post("customers", newCustomer)
+            .post("customers", nCustomerWithPostalCode)
             .then((res) => res.headers.get("location"));
     } catch (err) {
         console.error("Creating a Dwolla Customer Failed: ", err);
     }
 };
+
+
 
 export const createTransfer = async ({
     sourceFundingSourceUrl,

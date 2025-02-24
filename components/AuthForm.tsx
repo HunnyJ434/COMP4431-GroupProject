@@ -55,7 +55,7 @@ const AuthForm = ({ type }: { type: string }) => {
                   address1: data.address1!,
                   city: data.city!,
                   state: data.state!,
-                  postalCode: data.postalCode!,
+                  postalcode: data.postalCode!,
                   dateOfBirth: data.dateOfBirth!,
                   ssn: data.ssn!,
                   email: data.email,
