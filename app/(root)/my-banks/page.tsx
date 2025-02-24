@@ -25,7 +25,6 @@ const MyBanks = async () => {
           <div className="flex flex-wrap gap-6">
             {accounts && accounts.data.map((a: Bank[] & Account[]) => (
               <BankCard 
-                key={accounts.id}
                 accounts={a}
                 username={loggedIn?.firstName}
                 showBalance={false}

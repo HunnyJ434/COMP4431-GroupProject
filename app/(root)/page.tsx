@@ -4,7 +4,7 @@ import TotalBalanceBox from "@/components/TotalBalanceBox";
 import { getAccounts } from "@/lib/actions/bank.actions";
 import { getLoggedInUser } from "@/lib/actions/user.actions";
 
-const Home = async ({ searchParams }: { searchParams: { id?: string; page?: string } }) => {
+const Home = async () => {
     // const { id, page } = searchParams; // await not needed since it's already passed as props
 
     const loggedIn = await getLoggedInUser();

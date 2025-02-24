@@ -2,7 +2,7 @@
 import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-const BankCard = ({key, accounts, username, showBalance} : {key:any,accounts:Bank[] & Account[], username:any, showBalance: boolean}) => {
+const BankCard = ({accounts, username, showBalance} : {accounts:Bank[] & Account[], username:any, showBalance: boolean}) => {
 
     return (
         <div className='text-black'>
