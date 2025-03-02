@@ -1,45 +1,79 @@
+"use client";
+import { useEffect, useState } from "react";
+import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import HeaderBox from "@/components/HeaderBox";
 import RightSidebar from "@/components/RightSidebar";
 import TotalBalanceBox from "@/components/TotalBalanceBox";
-import { getAccounts } from "@/lib/actions/bank.actions";
-import { getLoggedInUser } from "@/lib/actions/user.actions";
 
-const Home = async () => {
-    // const { id, page } = searchParams; // await not needed since it's already passed as props
+const Home = () => {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const [bankData, setBankData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-    const loggedIn = await getLoggedInUser();
-    console.log(loggedIn?.$id);
-    const accounts = await getAccounts({ userId: loggedIn?.$id });
-    
-    // const appwriteItemId = (id as string) || accounts?.Data[0]?.appwriteItemId;
+  // Redirect if not authenticated
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/sign-in");
+    }
+  }, [status, router]);
 
-    return (
-        <section className="home">
-            <div className="home-content">
-                <header className="home-header">
-                    <HeaderBox
-                        type="greeting"
-                        title="Welcome"
-                        user={loggedIn?.name || 'Guest'}
-                        subtext="Access and manage your account and transactions efficiently"
-                    />
-                    <TotalBalanceBox
-                        accounts={[accounts?.data]}
-                        totalBanks={1}
-                        totalCurrentBalance={1110.69}
-                    />
-                </header>
+  useEffect(() => {
+    const fetchBankData = async () => {
+      if (!session?.user?.id) return;
 
-                <div>RECENT TRANSACTIONS</div>
-            </div>
+      try {
+        const response = await fetch(`/api/getBankData?userId=${session.user.id}`);
+        if (!response.ok) throw new Error("Failed to fetch bank data");
+        const data = await response.json();
+        setBankData(data);
+      } catch (error) {
+        console.error("Error fetching bank data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-            <RightSidebar
-                user={loggedIn as any}
-                transactions={[]}
-                banks={[{}, {}] as any}
-            />
-        </section>
-    );
+    if (session?.user?.id) {
+      fetchBankData();
+    }
+  }, [session]);
+
+  if (status === "loading" || loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!session) {
+    return null;
+  }
+
+
+  console.log(session.user)
+  const totalBalance = bankData?.accounts?.reduce((sum: number, account: any) => sum + (account.balance || 0), 0) || 0;
+  const totalAccounts = bankData?.accounts?.length || 0;
+
+  return (
+    <section className="home">
+      <div className="home-content">
+        <header className="home-header">
+          <HeaderBox
+            type="greeting"
+            title="Welcome"
+            user={session.user.firstName}
+            subtext="Access and manage your account and transactions efficiently"
+          />
+          <TotalBalanceBox
+            accounts={bankData?.accounts || []}
+            totalBanks={totalAccounts}
+            totalCurrentBalance={totalBalance}
+          />
+        </header>
+        <div>RECENT TRANSACTIONS</div>
+      </div>
+      <RightSidebar user={session.user as User} bankAccount={bankData} transactions={[]} />
+    </section>
+  );
 };
 
 export default Home;

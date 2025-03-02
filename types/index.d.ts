@@ -25,21 +25,42 @@ declare type LoginUser = {
   password: string;
 };
 
+declare type BankAccount = {
+  id: string;
+  name: string;
+  mask: string;
+  type: string;
+  subtype: string;
+  verification_status: string | null;
+  balance: number | null;
+  class_type: string | null;
+};
+
+declare type Institution = {
+  name: string;
+  institution_id: string;
+};
+
+declare type BankDetails = {
+  access_token: string;
+  accounts: BankAccount[];
+  institution: Institution;
+  link_session_id: string;
+  transfer_status: string;
+};
+
 declare type User = {
-  $id: string;
+  id: string;
   email: string;
-  userId: string;
-  dwollaCustomerUrl: string;
-  dwollaCustomerId: string;
   firstName: string;
   lastName: string;
-  name: string;
-  address1: string;
+  address: string;
   city: string;
   state: string;
-  postalcode: string;
+  postalCode: string;
   dateOfBirth: string;
   ssn: string;
+  bankAccount?: BankDetails;
 };
 
 declare type NewUserParams = {
@@ -49,19 +70,6 @@ declare type NewUserParams = {
   password: string;
 };
 
-declare type Account = {
-  id: string;
-  availableBalance: number;
-  currentBalance: number;
-  officialName: string;
-  mask: string;
-  institutionId: string;
-  name: string;
-  type: string;
-  subtype: string;
-  appwriteItemId: string;
-  sharableId: string;
-};
 
 declare type Transaction = {
   id: string;
@@ -80,16 +88,6 @@ declare type Transaction = {
   channel: string;
   senderBankId: string;
   receiverBankId: string;
-};
-
-declare type Bank = {
-  $id: string;
-  accountId: string;
-  bankId: string;
-  accessToken: string;
-  fundingSourceUrl: string;
-  userId: string;
-  sharableId: string;
 };
 
 declare type AccountTypes =
@@ -204,7 +202,7 @@ declare interface BankTabItemProps {
 }
 
 declare interface TotalBalanceBoxProps {
-  accounts?: any[];
+  accounts?: any;
   totalBanks: number;
   totalCurrentBalance: number;
 }
@@ -216,8 +214,8 @@ declare interface FooterProps {
 
 declare interface RightSidebarProps {
   user: User;
+  bankAccount?: BankDetails;
   transactions: Transaction[];
-  banks: Bank[] & Account[];
 }
 
 declare interface SiderbarProps {

@@ -5,12 +5,15 @@ import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { signOut } from "next-auth/react";
+import { useSession } from 'next-auth/react'
 import Footer from './Footer'
-
-
-const Sidebar = ({ user }: SiderbarProps) => {
+const Sidebar = () => {
   const pathname = usePathname();
-
+  const handleSignOut = async () => {
+    await signOut({ redirect: true, callbackUrl: '/sign-in' });
+};
+  const { data: session } = useSession();
   return (
     <section className="sidebar">
       <nav className="flex flex-col gap-4">
@@ -26,7 +29,8 @@ const Sidebar = ({ user }: SiderbarProps) => {
         </Link>
 
         {sidebarLinks.map((item) => {
-          const isActive = pathname === item.route || pathname.startsWith(`${item.route}/`)
+          
+          const isActive = pathname === item.route || pathname?.startsWith(`${item.route}/`)
 
           return (
             <Link href={item.route} key={item.label}
@@ -51,8 +55,8 @@ const Sidebar = ({ user }: SiderbarProps) => {
         
         
       </nav>
+      <Footer user = {session?.user as User}/>
 
-      <Footer user = {user}/>
     </section>
   )
 }
