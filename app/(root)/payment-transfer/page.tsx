@@ -12,6 +12,9 @@ const TransferForm = () => {
   const [bankData, setBankData] = useState<any>(null);
   const [transactionMessage, setTransactionMessage] = useState("");
   const [loading, setLoading] = useState(true);
+  if(!session?.user.bankAccount){
+    return <h1 className='m-auto'>No Bank Account Found.</h1>
+  }
   useEffect(() => {
     const fetchBankData = async () => {
       if (!session?.user?.id) return;
@@ -31,11 +34,14 @@ const TransferForm = () => {
     if (session?.user?.id) {
       fetchBankData();
     }
-    console.log(bankData)
+
   }, [session]);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(senderAccountId, receiverEmailId, amount)
+    if(senderAccountId === "SelectAccount"){
+      setError("Please select bank account.");
+      return;
+    }
     if (!senderAccountId || !receiverEmailId || !amount) {
       setError("Please fill in all fields.");
       return;
@@ -83,6 +89,9 @@ const TransferForm = () => {
                 onChange={(e) => setSenderAccountId(e.target.value)}
                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 >
+                  <option key="SelectAccount" value="SelectAccount">
+                    Select Bank Account
+                  </option>
                    
                     {bankData?.accounts.map((account:BankAccount) => (
                         <option key={account.id} value={account.id}>

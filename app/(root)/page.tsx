@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import HeaderBox from "@/components/HeaderBox";
 import RightSidebar from "@/components/RightSidebar";
 import TotalBalanceBox from "@/components/TotalBalanceBox";
-
+import TransactionList from "@/components/TransactionList";
 const Home = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -69,7 +69,10 @@ const Home = () => {
             totalCurrentBalance={totalBalance}
           />
         </header>
-        <div>RECENT TRANSACTIONS</div>
+        <div className="overflow-y-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-gray-400 scrollbar-track-gray-100 custom-scroll">
+          <p className="text-bold mb-3">RECENT TRANSACTIONS</p>
+          <TransactionList/>
+        </div>
       </div>
       <RightSidebar user={session.user as User} bankAccount={bankData} transactions={[]} />
     </section>

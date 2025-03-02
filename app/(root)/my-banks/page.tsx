@@ -8,7 +8,9 @@ const BankAccountsPage = () => {
   const [bankData, setAccounts] = useState<BankDetails>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-
+  if(!session?.user.bankAccount){
+    return <h1 className='m-auto'>No Bank Account Found.</h1>
+  }
   useEffect(() => {
     const fetchBankAccounts = async () => {
       if (!session?.user?.id) return;
@@ -33,7 +35,7 @@ const BankAccountsPage = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold text-center mb-6 mt-[2rem]">My Bank Accounts</h1>
-      <div className="relative flex items-center justify-center mt-[4rem] space-x-[9rem]">
+      <div className="relative flex items-center justify-center mt-[4rem] space-x-[4rem]">
         {bankData?.accounts.map((account) => (
         <div className="relative z-10">
           <BankCard key={account.id} account={account} username={account.name} institution={bankData?.institution} showBalance={true} />

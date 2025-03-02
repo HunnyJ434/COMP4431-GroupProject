@@ -29,9 +29,6 @@ const RightSidebar = ({ user, bankAccount,  transactions }: RightSidebarProps) =
   const { open, ready } = usePlaidLink({
     token: linkToken!,
     onSuccess: async (publicToken, metadata) => {
-      console.log("Plaid public token:", publicToken);
-      console.log("Bank metadata:", metadata);
-
       const userId = session?.user.id; // Replace with actual user ID, possibly from context or state
 
       // Extract relevant data from metadata
@@ -128,17 +125,6 @@ const RightSidebar = ({ user, bankAccount,  transactions }: RightSidebarProps) =
 ) : (
   <p>No bank accounts linked.</p> // You can replace this with a message or UI element
 )}
-
-
-        <div className="mt-10 flex flex-1 flex-col gap-6">
-          <h2 className="header-2">Top categories</h2>
-
-          <div className='space-y-5'>
-            {categories.map((category, index) => (
-              <Category key={category.name} category={category} />
-            ))}
-          </div>
-        </div>
       </section>
     </aside>
   )
