@@ -2,7 +2,7 @@ export const dynamic = 'force-dynamic'
 import SideBar from "@/components/Sidebar"
 import Image from "next/image";
 import MobileNav from "@/components/MobileNav"
-
+import Chatbot from "@/components/Chatbot";
 
 
 export default  function RootLayout({
@@ -22,7 +22,7 @@ export default  function RootLayout({
             </div>
             {children}
           </div>
- 
+      <Chatbot/>
     </main>
   );
 }
