@@ -26,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Return the user's bank data
-    return res.status(200).json(user.bank_account || {});
+    return res.status(200).json(user.bank_accounts || {});
   } catch (error) {
     console.error("Error fetching bank data:", error);
     return res.status(500).json({ error: "Error fetching bank data" });

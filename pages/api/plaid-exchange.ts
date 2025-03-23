@@ -13,86 +13,79 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         institution, 
         accounts, 
         transfer_status, 
-        link_session_id 
+        link_session_id,
+
       } = req.body;
 
-      // Validate the incoming data
-      if (!userId) {
-        return res.status(400).json({ error: "User ID is required" });
-      }
-
-      if (!publicToken) {
-        return res.status(400).json({ error: "Public token is required" });
-      }
-
-      if (!accounts || accounts.length === 0) {
-        return res.status(400).json({ error: "At least one account is required" });
+      if (!userId || !publicToken || !accounts || accounts.length === 0) {
+        return res.status(400).json({ error: "Missing required fields" });
       }
 
       // Exchange the public token for an access token
-      const response = await plaidClient.itemPublicTokenExchange({
-        public_token: publicToken,
-      });
-
+      const response = await plaidClient.itemPublicTokenExchange({ public_token: publicToken });
       const accessToken = response.data.access_token;
 
       // Fetch account balances from Plaid
-      const balanceResponse = await plaidClient.accountsBalanceGet({
-        access_token: accessToken,
-      });
+      const balanceResponse = await plaidClient.accountsBalanceGet({ access_token: accessToken });
 
       // Map over the accounts and get balances
-      const accountsWithBalance = accounts.map((account: { id: string; }) => {
+      const accountsWithBalance = accounts.map((account: { id: string; name: string }) => {
         const plaidAccount = balanceResponse.data.accounts.find((a) => a.account_id === account.id);
         return {
-          ...account,
-          balance: plaidAccount ? plaidAccount.balances.current : 0, // Default to 0 if balance is unavailable
+          id: account.id,
+          name: account.name,
+          balance: plaidAccount ? plaidAccount.balances.current : 0,
+          institution,
+          access_token: accessToken,
+          link_session_id,
+          transfer_status,
+          mask: plaidAccount?.mask, 
+          subtype: plaidAccount?.subtype,
         };
       });
 
       // Connect to the database
-      const db = await dbConnect();
-      const usersCollection = db.collection("users");
+// Connect to the database
+const db = await dbConnect();
+const usersCollection = db.collection("users");
+const userObjectId = new ObjectId(userId);
 
-      const userObjectId = new ObjectId(userId);
+// Fetch the current bank accounts of the user
+const user = await usersCollection.findOne({ _id: userObjectId });
 
-      // Update the bank account data in the database with the balance
-      const updateResult = await usersCollection.updateOne(
-        { _id: userObjectId },
-        {
-          $set: {
-            "bank_account.access_token": accessToken,
-            "bank_account.link_session_id": link_session_id,
-            "bank_account.institution": institution,
-            "bank_account.accounts": accountsWithBalance, // Store accounts with balance
-            "bank_account.transfer_status": transfer_status,
-          },
-        }
-      );
+if (!user) {
+  return res.status(404).json({ error: "User not found" });
+}
 
-      if (updateResult.matchedCount === 0) {
-        return res.status(404).json({ error: "User not found" });
-      }
 
-      // Retrieve the session to update the bank account data
-      const session = await getSession({ req });
+const existingAccounts = user?.bank_accounts || [];
 
-      if (session?.user) {
-        session.user.bankAccount = {
-          access_token: accessToken,
-          link_session_id: link_session_id,
-          institution: institution,
-          accounts: accountsWithBalance, // Include balances
-          transfer_status: transfer_status,
-        };
-      }
+// Create a Set of unique (institution + account name) combinations for existing accounts
+const existingAccountKeys = new Set(
+  existingAccounts.map((acc: any) => `${acc.institution.name}-${acc.name}`)
+);
 
-      return res.status(200).json({ 
-        message: "Bank account linked successfully!", 
-        access_token: accessToken, 
-        accounts: accountsWithBalance, // Return accounts with balances in response
-      });
+// Filter out new accounts that already exist in the database
+const newAccounts = accountsWithBalance.filter((account: { name: string; institution: any}) => {
+  const accountKey = `${account.institution.name}-${account.name}`;
+  return !existingAccountKeys.has(accountKey); // Only keep accounts not already present
+});
 
+if (newAccounts.length === 0) {
+  return res.status(400).json({ error: "All bank accounts are already linked." });
+}
+
+// Insert only unique accounts into the database
+const updateResult = await usersCollection.updateOne(
+  { _id: userObjectId },
+  { $push: { bank_accounts: { $each: newAccounts } } }
+);
+
+// Respond with success
+return res.status(200).json({
+  message: "Bank accounts linked successfully!",
+  accounts: newAccounts,
+});
     } catch (error) {
       console.error("Error during Plaid token exchange:", error);
       res.status(500).json({ error: "Failed to exchange token and store bank account." });

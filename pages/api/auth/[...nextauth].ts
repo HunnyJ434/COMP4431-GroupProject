@@ -18,36 +18,17 @@ declare module "next-auth" {
     postalCode: string;
     dateOfBirth: string;
     ssn: string;
-    bankAccount?: {
+    bankAccounts?: {
       access_token: string;
-      link_session_id: string;
-      institution: string;
-      accounts: any[];
-      transfer_status: string;
-    };
+      id: string;
+      name:string;
+      institution:{institution_id: string; name:string;};
+      balance: number;
+    }[];
   }
 
   interface Session {
-    user: {
-      id: string;
-      email: string;
-      firstName: string;
-      lastName: string;
-      address: string;
-      city: string;
-      state: string;
-      country: string;
-      postalCode: string;
-      dateOfBirth: string;
-      ssn: string;
-      bankAccount?: {
-        access_token: string;
-        link_session_id: string;
-        institution: string;
-        accounts: any[];
-        transfer_status: string;
-      };
-    };
+    user: User;
   }
 }
 
@@ -64,13 +45,13 @@ interface CustomJWT extends JWT {
   postalCode: string;
   dateOfBirth: string;
   ssn: string;
-  bankAccount?: {
+  bankAccounts?: {
     access_token: string;
-    link_session_id: string;
-    institution: string;
-    accounts: any[];
-    transfer_status: string;
-  };
+    id: string;
+    name:string;
+    institution:{institution_id: string; name:string;};
+    balance: number;
+  }[];
 }
 
 const authOptions: NextAuthOptions = {
@@ -111,7 +92,7 @@ const authOptions: NextAuthOptions = {
           postalCode: user.postalCode,
           dateOfBirth: user.dateOfBirth,
           ssn: user.ssn,
-          bankAccount: user.bank_account || null, // Include bank account if available
+          bankAccounts: user.bank_accounts || [], // Store multiple bank accounts as an array
         };
       },
     }),
@@ -134,7 +115,7 @@ const authOptions: NextAuthOptions = {
         token.postalCode = user.postalCode;
         token.dateOfBirth = user.dateOfBirth;
         token.ssn = user.ssn;
-        token.bankAccount = user.bankAccount || null; // Add bank account data to token
+        token.bankAccounts = user.bankAccounts || []; // Store bank accounts as an array
       }
       return token as CustomJWT;
     },
@@ -153,7 +134,7 @@ const authOptions: NextAuthOptions = {
           postalCode: token.postalCode,
           dateOfBirth: token.dateOfBirth,
           ssn: token.ssn,
-          bankAccount: token.bankAccount || null, // Add bank account data to session
+          bankAccounts: token.bankAccounts || [], // Ensure session user stores bank accounts as an array
         };
       }
       return session;

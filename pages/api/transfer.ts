@@ -8,12 +8,14 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2022-11
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
     try {
-      const { userId, senderAccountId, receiverEmailId, amount, message ,senderEmailId} = req.body;
+      const { userId, senderAccountId, receiverEmailId,  receiverAccountId, transferType, amount, message ,senderEmailId} = req.body;
 
-      if (!senderAccountId || !receiverEmailId || !amount) {
+      if (!senderAccountId || !amount) {
         return res.status(400).json({ error: "Missing required fields." });
       }
-
+      if (!receiverEmailId &&  !receiverAccountId) {
+        return res.status(400).json({ error: "Missing required fields." });
+      }
       const db = await dbConnect();
       const usersCollection = db.collection("users");
       const transactionsCollection = db.collection("transactions");
@@ -23,27 +25,38 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (!sender) return res.status(404).json({ error: "Sender not found." });
 
       // Find sender's bank account
-      const senderAccount = sender.bank_account.accounts.find((account: { id: string }) => account.id === senderAccountId);
+      const senderAccount = sender.bank_accounts.find((account: { id: string }) => account.id === senderAccountId);
       if (!senderAccount) return res.status(404).json({ error: "Sender's account not found." });
 
       if (senderAccount.balance < amount) {
         return res.status(400).json({ error: "Insufficient funds." });
       }
-
-      // Find receiver
-      const receiver = await usersCollection.findOne({ email: receiverEmailId });
-      if (!receiver) return res.status(404).json({ error: "Receiver not found." });
-
-      // Get receiver's default bank account
-      const receiverAccount = receiver.bank_account.accounts[0];
-      if (!receiverAccount) return res.status(404).json({ error: "Receiver's account not found." });
+      // depending on the payment type receiver account is selected
+      var receiverAccount;
+      var receiverId;
+      var receiver
+      if(transferType == "personal-accounts"){
+        receiverAccount =  sender.bank_accounts.find((account: { id: string }) => account.id === receiverAccountId);
+        if (!receiverAccount) return res.status(404).json({ error: "receving account not found." });
+        receiverId = senderEmailId;
+      }
+      else if(transferType == "other-accounts"){
+       receiver = await usersCollection.findOne({ email: receiverEmailId });
+        if (!receiver) return res.status(404).json({ error: "Receiver not found." });
+        receiverAccount = receiver.bank_accounts[0];
+        if (!receiverAccount) return res.status(404).json({ error: "Receiver's account not found." });
+        receiverId = receiverEmailId;
+      }
 
       // Create a transaction entry before processing the transfer
       const transaction = {
         senderId: userId,
+        senderAccountName:senderAccount.name,
+        receiverAccountName:receiverAccount.name,
+        transferType,
         senderAccountId,
         senderEmailId,
-        receiverEmailId,
+        receiverId,
         amount,
         status: "pending",
         timestamp: new Date(),
@@ -61,7 +74,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         metadata: {
           senderId: userId,
           senderAccountId,
-          receiverEmailId,
+          receiverId,
         },
       });
 
@@ -77,13 +90,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       await usersCollection.updateOne(
         { _id: new ObjectId(userId) },
-        { $set: { "bank_account.accounts": sender.bank_account.accounts } }
+        { $set: { "bank_accounts": sender.bank_accounts } }
       );
+      if(transferType === "other-accounts"){
 
-      await usersCollection.updateOne(
-        { email: receiverEmailId },
-        { $set: { "bank_account.accounts": receiver.bank_account.accounts } }
-      );
+        await usersCollection.updateOne(
+          { email: receiverEmailId },
+          { $set: { "bank_accounts": receiver?.bank_accounts } }
+        );
+      }
+
+ 
 
       return res.status(200).json({
         message: "Transfer successful",

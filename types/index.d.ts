@@ -34,6 +34,8 @@ declare type BankAccount = {
   verification_status: string | null;
   balance: number | null;
   class_type: string | null;
+  mask: string;
+  subtype: string;
 };
 
 declare type Institution = {
@@ -214,7 +216,7 @@ declare interface FooterProps {
 
 declare interface RightSidebarProps {
   user: User;
-  bankAccount?: BankDetails;
+  bankAccount?: any;
   transactions: Transaction[];
 }
 

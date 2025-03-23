@@ -28,7 +28,7 @@ const Footer = ({user, type='desktop'}: FooterProps)=>{
              </p>
             </div>
             <div className =" " onClick={handleSignOut}>
-                <button  className="text-left truncate text-gray-700 ">Log Out</button>
+                <button  className="text-left truncate text-white md:text-gray-700 text-[0.8rem] md:text-[1rem]">Log Out</button>
             </div>
         </footer>
     )

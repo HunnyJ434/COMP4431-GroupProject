@@ -16,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       const transactions = await transactionsCollection
         .find({
-          $or: [{ senderId: user.id }, { receiverEmailId: user.email }],
+          $or: [{ senderId: user.id }, { receiverId: user.email }],
         })
         .sort({ timestamp: -1 })
         .toArray();

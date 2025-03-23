@@ -1,8 +1,8 @@
 export const dynamic = 'force-dynamic'
 import SideBar from "@/components/Sidebar"
 import Image from "next/image";
-import MobileNav from "@/components/MobileNav"
-import Chatbot from "@/components/Chatbot";
+
+
 
 
 export default  function RootLayout({
@@ -13,16 +13,12 @@ export default  function RootLayout({
 
 
   return (
-    <main className="flex h-screen w-full font-inter">
+    <main className="flex flex-col md:flex-row h-screen w-full font-inter">
       <SideBar/>
           <div className="flex flex-col size-full">
-            <div className="root-layout">
-              <Image src="/icons/logo.png" width={30} height={30} alt="menu icon" />
- 
-            </div>
             {children}
           </div>
-      <Chatbot/>
+
     </main>
   );
 }

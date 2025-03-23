@@ -34,7 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(400).json({ message: 'reCAPTCHA validation failed' });
         }
 
-        if (!email || !password || !firstName || !lastName || !address || !city || !state || !postalCode || !dateOfBirth || !ssn) {
+        if (!email || !password || !firstName || !lastName || !address || !city || !state || !postalCode) {
             return res.status(400).json({ message: 'Missing required fields' });
         }
 

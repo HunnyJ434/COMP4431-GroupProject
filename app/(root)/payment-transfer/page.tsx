@@ -5,14 +5,16 @@ import { useSession } from "next-auth/react";
 const TransferForm = () => {
   const { data: session, status } = useSession();
   const [senderAccountId, setSenderAccountId] = useState("");
+  const [receiverAccountId, setReceiverAccountId] = useState("");
   const [receiverEmailId, setReceiverEmailId] = useState("");
+  const [transferType, setTransferType] = useState("");
   const [amount, setAmount] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [bankData, setBankData] = useState<any>(null);
   const [transactionMessage, setTransactionMessage] = useState("");
   const [loading, setLoading] = useState(true);
-  if(!session?.user.bankAccount){
+  if(session?.user.bankAccounts?.length === 0){
     return <h1 className='m-auto'>No Bank Account Found.</h1>
   }
   useEffect(() => {
@@ -42,11 +44,22 @@ const TransferForm = () => {
       setError("Please select bank account.");
       return;
     }
-    if (!senderAccountId || !receiverEmailId || !amount) {
+    if(transferType === "none"){
+      setError("Please select transfer type");
+      return;
+    }
+    if (!senderAccountId || !amount) {
       setError("Please fill in all fields.");
       return;
     }
-
+    if(!receiverEmailId && !receiverAccountId){
+      setError("Please fill in all fields.");
+      return;
+    }
+    if(session?.user.email === receiverEmailId){
+      setError("Please use Transfer Between personal account in Transfer type field");
+      return;
+    }
     try {
       const response = await fetch("/api/transfer", {
         method: "POST",
@@ -57,6 +70,8 @@ const TransferForm = () => {
           userId: session?.user.id,
           senderAccountId,
           receiverEmailId,
+          receiverAccountId,
+          transferType,
           senderEmailId: session?.user.email,
           amount: parseFloat(amount),
           message: transactionMessage,
@@ -79,8 +94,8 @@ const TransferForm = () => {
   };
 
   return (
-    <div className=" mx-auto bg-white shadow- w-[35rem] rounded-lg p-6 mt-10">
-      <h2 className="text-2xl font-bold text-center text-gray-800 mb-4">Transfer Funds</h2>
+    <div className=" mx-auto bg-white shadow  md:w-[35rem] rounded-lg p-6 mt-10">
+      <h2 className="text-[1.6rem] md:text-2xl font-bold text-center text-gray-800 mb-4">Transfer Funds</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <label className="block text-sm font-medium text-gray-700">Sender Account</label>
@@ -93,7 +108,7 @@ const TransferForm = () => {
                     Select Bank Account
                   </option>
                    
-                    {bankData?.accounts.map((account:BankAccount) => (
+                    {bankData?.map((account:BankAccount) => (
                         <option key={account.id} value={account.id}>
                         {account.name} - {"•••• •••• •••• "} {account.mask} (${account.balance})
                         </option>
@@ -101,6 +116,44 @@ const TransferForm = () => {
             </select>
 </div>
 
+    <div>
+    <label className="block text-sm font-medium text-gray-700">Transfer Type</label>
+         <select  value={transferType}
+          onChange={(e) => setTransferType(e.target.value)}
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+              <option value="none">
+               Select Transfer Type
+              </option>
+              <option value="personal-accounts">
+                Between personal accounts
+              </option>
+              <option value="other-accounts">
+                To somebody
+              </option>
+         </select>
+    </div>
+
+{transferType === "personal-accounts"? 
+    <div>
+        <label className="block text-sm font-medium text-gray-700">Receiver Account</label>
+            <select
+                value={receiverAccountId}
+                onChange={(e) => setReceiverAccountId(e.target.value)}
+                className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option key="SelectAccount" value="SelectAccount">
+                    Select Bank Account
+                  </option>
+                   
+                    {bankData?.filter((account: BankAccount) => account.id !== senderAccountId).map((account:BankAccount) => (
+                        <option key={account.id} value={account.id}>
+                        {account.name} - {"•••• •••• •••• "} {account.mask} (${account.balance})
+                        </option>
+                    ))}
+            </select>
+</div> : <></>
+}
+{transferType === "other-accounts"? 
         <div>
           <label className="block text-sm font-medium text-gray-700">Receiver Email</label>
           <input
@@ -111,7 +164,7 @@ const TransferForm = () => {
             placeholder="Enter receiver email"
           />
         </div>
-
+      : <></>}
         <div>
           <label className="block text-sm font-medium text-gray-700">Amount</label>
           <input

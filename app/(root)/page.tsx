@@ -12,7 +12,7 @@ const Home = () => {
   const router = useRouter();
   const [bankData, setBankData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-
+  console.log(session)
   // Redirect if not authenticated
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -50,9 +50,12 @@ const Home = () => {
   }
 
 
-  console.log(session.user)
-  const totalBalance = bankData?.accounts?.reduce((sum: number, account: any) => sum + (account.balance || 0), 0) || 0;
-  const totalAccounts = bankData?.accounts?.length || 0;
+  // console.log(session.user)
+  var totalBalance = 0;
+if(bankData.length > 0) {
+  totalBalance = bankData?.reduce((sum: number, account: any) => sum + (account.balance || 0), 0) || 0;
+}
+  const totalAccounts = bankData?.length || 0;
 
   return (
     <section className="home">
@@ -65,7 +68,7 @@ const Home = () => {
             subtext="Access and manage your account and transactions efficiently"
           />
           <TotalBalanceBox
-            accounts={bankData?.accounts || []}
+            accounts={bankData || []}
             totalBanks={totalAccounts}
             totalCurrentBalance={totalBalance}
           />

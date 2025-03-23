@@ -9,10 +9,10 @@ import { validateAddress } from '../pages/api/geocode';
 import { signIn } from 'next-auth/react';
 import ReCAPTCHA from 'react-google-recaptcha';
 
-const SITE_KEY = "6Ld_1PUqAAAAAJizTvd5umdWQODsbSHeBIN9ezhd"; // Replace with your actual reCAPTCHA site key
-
+const SITE_KEY = "6Lfn1_sqAAAAAAtme695m0QVl2aSQZuVZ_G0iPIq"; // Replace with your actual reCAPTCHA site key
 const AuthForm = ({ type }: { type: string }) => {
     const router = useRouter();
+    const [recaptchaToken, setRecaptchaToken] = useState('');
     const [userData, setUserData] = useState({
         firstName: '',
         lastName: '',
@@ -29,7 +29,7 @@ const AuthForm = ({ type }: { type: string }) => {
 
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
-    const [recaptchaToken, setRecaptchaToken] = useState('');
+
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setUserData({
@@ -76,12 +76,16 @@ const AuthForm = ({ type }: { type: string }) => {
                     setIsLoading(false);
                     return;
                 }
-
+                const requestBody = {
+                    ...userData, 
+                    recaptchaToken, // Include the token inside the object
+                  };
+                  console.log(requestBody)
                 // Submit sign-up request
                 const response = await fetch('/api/auth/signup', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(userData),
+                    body: JSON.stringify(requestBody),
                 });
 
                 const result = await response.json();
@@ -178,7 +182,7 @@ const AuthForm = ({ type }: { type: string }) => {
                 </div>
 
                 {/* reCAPTCHA for Sign In Only */}
-                {type === 'sign-in' && <ReCAPTCHA sitekey={SITE_KEY} onChange={(token) => setRecaptchaToken(token || '')} />}
+                <ReCAPTCHA sitekey={SITE_KEY} onChange={(token) => setRecaptchaToken(token || '')} />
 
                 {errorMessage && <p className="text-red-500">{errorMessage}</p>}
 

@@ -1,16 +1,14 @@
 import Image from 'next/image'
-import Link from 'next/link'
 import React from 'react'
 import BankCard from './BankCard'
-import { countTransactionCategories } from '@/lib/utils'
-import Category from './Category'
 import { useState, useEffect } from "react";
 import { usePlaidLink } from "react-plaid-link";
 import { useSession ,signOut} from "next-auth/react";
+import Alert from './Alert';
 const RightSidebar = ({ user, bankAccount,  transactions }: RightSidebarProps) => {
   const [linkToken, setLinkToken] = useState<string | null>(null);
   const { data: session, status } = useSession();
-
+  const [alertKey, setAlertKey] = useState<number>(0);
   useEffect(() => {
     // Fetch link token from API
     const fetchLinkToken = async () => {
@@ -52,13 +50,18 @@ const RightSidebar = ({ user, bankAccount,  transactions }: RightSidebarProps) =
       });
 
       const data = await res.json();
-      await signOut({ redirect: true, callbackUrl: '/sign-in' });
+      if(data.error){
+          setAlertKey(prevKey => prevKey + 1);
+      }
+      else{
+        await signOut({ redirect: true, callbackUrl: '/sign-in' });
+      }
+  
 
     },
     onExit: (error, metadata) => console.log("User exited Plaid:", error, metadata),
   });
 
-  const categories: CategoryCount[] = countTransactionCategories(transactions);
     if(!user) return;
   return (
     <aside className="right-sidebar">
@@ -79,7 +82,9 @@ const RightSidebar = ({ user, bankAccount,  transactions }: RightSidebarProps) =
           </div>
         </div>
       </section>
-
+      { alertKey > 0 && (
+        <Alert key={alertKey} message="All bank accounts are already linked." type="error" />
+      )}
       <section className="banks">
         <div className="flex w-full justify-between">
           <h2 className="header-2">My Banks</h2>
@@ -96,34 +101,44 @@ const RightSidebar = ({ user, bankAccount,  transactions }: RightSidebarProps) =
           </button>
         </div>
 
-        {bankAccount?.accounts?.length? (
+        {bankAccount?.length ? (
   <div className="relative flex flex-1 flex-col items-center justify-center gap-5">
-    {bankAccount?.accounts[0] && (
+    {bankAccount[0] && (
       <div className="relative z-10">
         <BankCard 
-          key={bankAccount.accounts[0].id}
-          account={bankAccount.accounts[0]}
+          key={bankAccount[0].id}
+          accountType={bankAccount[0].subtype}
+          accountMask={bankAccount[0].mask}
+          balance={bankAccount[0].balance}
           username={`${user.firstName} ${user.lastName}`}
           showBalance={true}
-          institution={bankAccount.institution}
+          institution={bankAccount[0].institution.name}
         />
       </div>
     )}
     
-    {bankAccount?.accounts[1] && (
+    {bankAccount[1] && (
       <div className="absolute right-0 top-8 z-0 w-[90%]">
-        <BankCard 
-          key={bankAccount.accounts[1].id}
-          account={bankAccount.accounts[1]}
+      <BankCard 
+          key={bankAccount[1].id}
+          accountType={bankAccount[1].subtype}
+          accountMask={bankAccount[1].mask}
+          balance={bankAccount[1].balance}
           username={`${user.firstName} ${user.lastName}`}
           showBalance={true}
-          institution={bankAccount.institution}
+          institution={bankAccount[1].institution.name}
         />
       </div>
     )}
+    <h1 className='mt-[3rem]'>Since this is a development mode, you can add bank account by selecting
+      any bank, skipping  through mobile verification, and using the credentials "user_good" and "pass_good"
+      to add accounts.
+    </h1>
   </div>
 ) : (
-  <p>No bank accounts linked.</p> // You can replace this with a message or UI element
+  <p>No bank accounts linked. Since this is a development mode, you can add bank account by selecting
+  any bank, skipping  through mobile verification, and using the credentials "user_good" and "pass_good"
+  to add accounts.</p> // You can replace this with a message or UI element
 )}
       </section>
     </aside>
