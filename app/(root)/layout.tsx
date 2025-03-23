@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic'
 import SideBar from "@/components/Sidebar"
 import Image from "next/image";
+import Chatbot from "@/components/Chatbot";
 
 
 
@@ -18,7 +19,7 @@ export default  function RootLayout({
           <div className="flex flex-col size-full">
             {children}
           </div>
-
+          <Chatbot/>
     </main>
   );
 }

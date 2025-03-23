@@ -61,12 +61,12 @@ if(bankData.length > 0) {
     <section className="home">
       <div className="home-content">
         <header className="home-header">
-          <HeaderBox
+          {/* <HeaderBox
             type="greeting"
             title="Welcome"
             user={session.user.firstName}
             subtext="Access and manage your account and transactions efficiently"
-          />
+          /> */}
           <TotalBalanceBox
             accounts={bankData || []}
             totalBanks={totalAccounts}

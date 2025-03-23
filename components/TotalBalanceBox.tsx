@@ -24,6 +24,9 @@ const TotalBalanceBox = ({
                     </div>
                 </div>
             </div>
+            <p className='text-[0.6rem] lg:text-[0.8rem]  w-[14rem]'>Since this is a development mode, you can add bank accounts by selecting
+  any bank, skipping through mobile verification, and using the credentials "user_good" and "pass_good"
+  to add accounts.</p>
         </section>
     )
 }

@@ -74,7 +74,7 @@ const Sidebar = () => {
 
   return (
     <section className="sidebar">
-      <nav className="flex md:flex-col h-[6rem] space-between ">
+      <nav className="flex md:flex-col h-[6rem] space-between mb-[2rem] md:mb-[0]">
         <Link href="/" className="mb-12 mr-[4rem] cursor-pointer flex-col items-center gap-2">
           <Image 
             src="/icons/logo.png"

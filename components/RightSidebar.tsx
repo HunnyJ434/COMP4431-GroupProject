@@ -130,15 +130,9 @@ const RightSidebar = ({ user, bankAccount,  transactions }: RightSidebarProps) =
         />
       </div>
     )}
-    <h1 className='mt-[3rem]'>Since this is a development mode, you can add bank account by selecting
-      any bank, skipping  through mobile verification, and using the credentials "user_good" and "pass_good"
-      to add accounts.
-    </h1>
   </div>
 ) : (
-  <p>No bank accounts linked. Since this is a development mode, you can add bank account by selecting
-  any bank, skipping  through mobile verification, and using the credentials "user_good" and "pass_good"
-  to add accounts.</p> // You can replace this with a message or UI element
+  <p>No bank accounts linked</p> // You can replace this with a message or UI element
 )}
       </section>
     </aside>

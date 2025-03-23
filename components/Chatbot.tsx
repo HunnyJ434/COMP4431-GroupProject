@@ -148,7 +148,7 @@ export default function Chatbot() {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed w-[28rem] h-[36rem] bottom-[4rem] z-[10000] right-4 bg-white text-[#002147] border border-gray-300 rounded-lg shadow-xl p-4 flex flex-col">
+        <div className="fixed w-[25rem] h-[32rem] bottom-[4rem] z-[10000] right-4 bg-white text-[#002147] border border-gray-300 rounded-lg shadow-xl p-4 flex flex-col">
           
           {/* Chat Messages */}
           <div className="flex-1 overflow-y-auto space-y-3 p-2">

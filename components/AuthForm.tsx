@@ -110,14 +110,14 @@ const AuthForm = ({ type }: { type: string }) => {
                     <h1 className="text-26 font-ibm-plex-serif font-bold text-black-1">LU Banking Management</h1>
                 </Link>
                 <div className="flex flex-col gap-1 md:gap-3">
-                    <h1 className="text-24 lg:text-36 font-semibold text-gray-900">{type === 'sign-in' ? 'Sign In' : 'Sign Up'}</h1>
+                    <h1 className="text-24 lg:text-30 font-semibold text-gray-900">{type === 'sign-in' ? 'Sign In' : 'Sign Up'}</h1>
                     <p className="text-16 font-normal text-gray-600">
                         {type === 'sign-in' ? 'Please enter your credentials' : 'Please enter your details'}
                     </p>
                 </div>
             </header>
 
-            <form className="space-y-8" onSubmit={handleSubmit}>
+            <form className="space-y-3" onSubmit={handleSubmit}>
                 {type === 'sign-up' && (
                     <>
                         <div className="flex w-[100%]">
