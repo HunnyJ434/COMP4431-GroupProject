@@ -47,7 +47,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // Connect to the database
 // Connect to the database
 const db = await dbConnect();
-const usersCollection = db.collection("users");
+const usersCollection:any = db.collection("users");
 const userObjectId = new ObjectId(userId);
 
 // Fetch the current bank accounts of the user
