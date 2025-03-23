@@ -141,14 +141,14 @@ export default function Chatbot() {
       {/* Chat Toggle Button */}
       <button
         onClick={toggleChat}
-        className="fixed bottom-4 right-4 bg-[#002147] text-white px-4 py-2 rounded-full shadow-lg hover:bg-[#003366] transition-all duration-200"
+        className="fixed bottom-4 right-4 bg-[#002147] text-white px-4 py-2 rounded-full shadow-lg hover:bg-[#003366] transition-all duration-200 z-[10000]"
       >
         {isOpen ? 'Close Chat' : 'Chat with us'}
       </button>
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed w-[25rem] h-[32rem] bottom-[4rem] z-[10000] right-4 bg-white text-[#002147] border border-gray-300 rounded-lg shadow-xl p-4 flex flex-col">
+        <div className="fixed w-[16rem] h-[28rem] md:w-[20rem] lg:w-[25rem]  bottom-[4rem] z-[10000] right-4 bg-white text-[#002147] border border-gray-300 rounded-lg shadow-xl p-4 flex flex-col">
           
           {/* Chat Messages */}
           <div className="flex-1 overflow-y-auto space-y-3 p-2">
@@ -166,17 +166,17 @@ export default function Chatbot() {
           </div>
 
           {/* Input Section */}
-          <div className="flex items-center border-t border-gray-300 pt-3">
+          <div className="flex flex-col lg:flex-row items-center border-t border-gray-300 pt-3">
             <input
               type="text"
-              className="flex-1 bg-gray-100 text-[#002147] p-3 rounded-lg text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#003366]"
+              className="flex-1 bg-gray-100 text-[#002147] p-3 rounded-lg text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#003366] w-full"
               value={input}
               onKeyDown={handleKeyDown}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Type a message..."
             />
             <button
-              className="ml-3 bg-[#002147] text-white px-4 py-2 rounded-full hover:bg-[#003366] transition-all duration-200"
+              className="ml-3 bg-[#002147] text-white px-4 py-2 mt-3 w-full lg:mt-0 lg:w-[6rem] rounded-full hover:bg-[#003366] transition-all duration-200"
               onClick={handleSend}
               disabled={loading}
             >
