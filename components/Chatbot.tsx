@@ -94,9 +94,10 @@ export default function Chatbot() {
 'use client';
 
 import { useState } from 'react';
-
+import { useSession } from "next-auth/react";
 export default function Chatbot() {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>([]);
+  const { data: session } = useSession();
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -113,7 +114,10 @@ export default function Chatbot() {
       const res = await fetch('/api/chatbot', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: input }),
+        body: JSON.stringify({
+          message: input,
+          userId: session?.user.id, // Include session user data here
+        }),
       });
 
       if (!res.ok) throw new Error(`Server error: ${res.status}`);

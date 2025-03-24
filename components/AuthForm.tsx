@@ -191,10 +191,11 @@ const AuthForm = ({ type }: { type: string }) => {
                 </Button>
             </form>
 
-            <footer className="flex justify-center gap-1">
+            <footer className="flex justify-center gap-1 mb-0">
                 <p>{type === 'sign-in' ? "Don't have an account?" : "Already have an account?"}</p>
                 <Link href={type === 'sign-in' ? '/sign-up' : '/sign-in'}><span className="form-link">{type === 'sign-in' ? 'Sign up' : 'Sign in'}</span></Link>
             </footer>
+            <Link href="./reset-password" className=" text-[#670305] underline">Forgot your password?</Link>
         </section>
     );
 };

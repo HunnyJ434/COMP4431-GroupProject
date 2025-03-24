@@ -6,13 +6,12 @@ import HeaderBox from "@/components/HeaderBox";
 import RightSidebar from "@/components/RightSidebar";
 import TotalBalanceBox from "@/components/TotalBalanceBox";
 import TransactionList from "@/components/TransactionList";
-import Chatbot from "@/components/Chatbot";
 const Home = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [bankData, setBankData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  console.log(session)
+
   // Redirect if not authenticated
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -61,18 +60,18 @@ if(bankData.length > 0) {
     <section className="home">
       <div className="home-content">
         <header className="home-header">
-          {/* <HeaderBox
+          <HeaderBox
             type="greeting"
             title="Welcome"
             user={session.user.firstName}
             subtext="Access and manage your account and transactions efficiently"
-          /> */}
+          />
           <TotalBalanceBox
             accounts={bankData || []}
             totalBanks={totalAccounts}
             totalCurrentBalance={totalBalance}
           />
-          <Chatbot/>
+
         </header>
         <div className="overflow-y-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-gray-400 scrollbar-track-gray-100 custom-scroll">
           <p className="text-bold mb-3">RECENT TRANSACTIONS</p>
