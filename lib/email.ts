@@ -1,7 +1,7 @@
 // lib/email.ts
 import sgMail from '@sendgrid/mail';
 
-sgMail.setApiKey("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");
+sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
 
 export async function sendResetEmail(email: string, token: string) {
   const resetLink = `${process.env.NEXT_PUBLIC_BASE_URL}/newpassword?token=${token}&email=${email}`;
