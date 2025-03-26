@@ -31,9 +31,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       totalBalance = user.bank_accounts?.reduce((sum: number, account: any) => sum + (account.balance || 0), 0) || 0;
     }
     const totalAccounts = user.bank_accounts?.length || 0;
-    const customMessage = `user message: ${message} -- user data in case user specifically inqury about it -- 
-    name: ${user.firstName + " " + user.lastName}, email: ${user.email}, address: ${user.address + " " + user.city + " " +
-      user.state + " " + user.postalCode}, User total balance ${totalBalance}, total bank accounts ${totalAccounts}`
+    const customMessage = `
+User message: ${message}
+If the user is asking about their account details, here is the relevant info:
+
+Name: ${user.firstName} ${user.lastName}
+Email: ${user.email}
+Address: ${user.address}, ${user.city}, ${user.state}, ${user.postalCode}
+Total Balance: $${totalBalance}
+Total Bank Accounts: ${totalAccounts}
+`;
+
+
 
     const response = await fetch('https://api.chatpdf.com/v1/chats/message', {
       method: 'POST',
