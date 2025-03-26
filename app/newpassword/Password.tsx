@@ -3,9 +3,11 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Alert from '@/components/Alert';
+import { useRouter } from 'next/navigation'; 
 import { Button } from '@/components/ui/button';
 function Password() {
   const searchParams = useSearchParams();
+    const router = useRouter();
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -80,21 +82,25 @@ function Password() {
   }
 
   return (
-    <div className="flex items-center flex-col mt-[10rem] space-y-[1rem]">
-      <h1 className='text-[1.5rem] text-thin'>Reset Your Password</h1>
+    <div className="flex items-center justify-center  flex-col mt-[10rem] space-y-[1rem]">
+      <h1 className=' xl:text-[1.5rem] text-thin'>Reset Your Password</h1>
       {errorMessage && <p className="error">{errorMessage}</p>}
       <form onSubmit={handleSubmit}>
         <div>
-              <input type="password" id="newPassword" value={newPassword}  onChange={(e) => setNewPassword(e.target.value)} placeholder="New Password" required className="mb-3 p-2 border h-[2.8rem] w-[33rem] border-gray-300 rounded-lg"/>
+              <input type="password" id="newPassword" value={newPassword}  onChange={(e) => setNewPassword(e.target.value)} placeholder="New Password" required className="mb-3 p-2 border h-[2.8rem] w-[25rem] xl:w-[33rem] border-gray-300 rounded-lg"/>
         </div>
         <div>
-              <input type="password" id="confirmPassword" value={confirmPassword}  onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirm New Password" required className="mb-3 p-2 border h-[2.8rem] w-[33rem] border-gray-300 rounded-lg"/>
+              <input type="password" id="confirmPassword" value={confirmPassword}  onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirm New Password" required className="mb-3 p-2 border h-[2.8rem] w-[25rem] xl:w-[33rem] border-gray-300 rounded-lg"/>
         </div>
 
-        <Button className='mt-[2rem] w-[33.2rem] h-[3rem]' type="submit" disabled={isLoading}>
+        <Button className='mt-[2rem] w-[25rem] xl:w-[33.2rem] h-[3rem]' type="submit" disabled={isLoading}>
             {isLoading ? 'Resetting...' : 'Reset Password'}
         </Button>
+
       </form>
+      <Button className='mt-[2rem] w-[25rem] xl:w-[33.2rem] h-[3rem]' onClick={() => router.push('/sign-up')}>
+                    Back to registeration
+                </Button>
       { alertKey > 0 && (
         <Alert key={alertKey} message="Your password is successfully reset" type="success" />
       )}

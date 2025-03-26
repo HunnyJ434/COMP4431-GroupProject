@@ -36,7 +36,7 @@ export default function ResetPassword() {
   };
 
   return (
-    <div className="mt-[10rem] flex px-[5rem] mb-3">
+    <div className="mt-[10rem] flex flex-col lg:flex-row space-y-[2rem] lg:space-y-[0rem] px-[5rem] mb-3">
       <div className="w-1/2 flex flex-col space-y-5">
         <h1 className="text-[1.5rem]">Reset your password</h1>
         <p className="text-[0.8rem]">We will send you an email to reset your password.</p>
@@ -50,7 +50,7 @@ export default function ResetPassword() {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Email"
             required
-            className="mb-3 p-2 border h-[2.8rem] w-[32rem] border-gray-300 block rounded-lg"
+            className="mb-3 p-2 border h-[2.8rem] w-[25rem] xl:w-[32rem] border-gray-300 block rounded-lg"
           />
           <div className="flex space-x-[1.5rem]">
             <Button className='mt-[2rem] w-[8rem] h-[3rem]' type="submit">
